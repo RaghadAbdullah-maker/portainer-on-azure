@@ -1,0 +1,26 @@
+# Recource Group Name 
+resource_group_name ="rg-portainer-lab"
+
+# Azure region
+location = "westus2"
+
+# Virtual Network Name
+vnet_name = "vnet-portainer-lab"
+
+# Virtual Network add space 
+vnet_address_space =["10.20.0.0/16"]
+
+#Subnet Name
+subnet_name ="snet-portainer-lab"
+
+#Subnet add space 
+subnet_address_prefixes =["10.20.1.0/24"]
+
+#NSG name
+nsg_name = "nsg-portainer-lab"
+
+# Public IP addresses allowed to access SSH and Portainer
+admin_source_cidrs = [
+    M1 = "YOUR_PUBLIC_IP/32"
+]
+

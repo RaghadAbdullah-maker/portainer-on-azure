@@ -1,0 +1,13 @@
+# Downloaded Terraform providers
+.terraform/
+
+# Terraform state and backups
+*.tfstate
+*.tfstate.*
+
+# Local configuration values
+*.tfvars
+*.tfvars.json
+
+# Saved deployment plans
+*.tfplan
