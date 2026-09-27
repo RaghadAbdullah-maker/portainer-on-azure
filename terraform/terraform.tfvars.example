@@ -27,10 +27,21 @@ admin_source_cidrs = [
   "YOUR_PUBLIC_IP/32"
 ]
 
+#VM name
+vm_name = "vm-portainer-lab"
 
-# The public SSH key on the computer that will deploy the VM
+#VM size 
+vm_size = "Standard_B2als_v2"
+
+#Adminusername
+admin_username = "azureadmin"
+
+# SSH public keys for team members
 ssh_public_keys = [
-  "ssh-ed25519 AAAA...MEMBER1...",
-  "ssh-ed25519 AAAA...MEMBER2...",
-  "ssh-ed25519 AAAA...MEMBER3..."
+  "MEMBER_1_PUBLIC_KEY",
+  "MEMBER_2_PUBLIC_KEY",
+  "MEMBER_3_PUBLIC_KEY"
 ]
+
+
+

@@ -83,7 +83,7 @@ resource "azurerm_public_ip" "platform" {
 
 
 
-#Crate NIC
+#Create NIC
 
 resource "azurerm_network_interface" "platform" {
   name                = "nic-portainer-lab"
@@ -98,15 +98,14 @@ resource "azurerm_network_interface" "platform" {
   }
 }
 
-#Create VM
-
+# Create VM
 
 resource "azurerm_linux_virtual_machine" "platform" {
-  name                = "vm-portainer-lab"
+  name                = var.vm_name
   resource_group_name = azurerm_resource_group.platform.name
   location            = azurerm_resource_group.platform.location
   size                = var.vm_size
-  admin_username      = "azureuser"
+  admin_username      = var.admin_username
 
   network_interface_ids = [
     azurerm_network_interface.platform.id
@@ -115,19 +114,18 @@ resource "azurerm_linux_virtual_machine" "platform" {
   disable_password_authentication = true
 
   dynamic "admin_ssh_key" {
-  for_each = var.ssh_public_keys
+    for_each = var.ssh_public_keys
 
-  content {
-    username   = "azureuser"
-    public_key = admin_ssh_key.value
+    content {
+      username   = var.admin_username
+      public_key = admin_ssh_key.value
+    }
   }
-}
 
   os_disk {
     name                 = "disk-portainer-lab"
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-    disk_size_gb         = 30
+    storage_account_type = "StandardSSD_LRS"
   }
 
   source_image_reference {

@@ -40,6 +40,6 @@ output "vm_name" {
 #Public IP address
 
 output "public_ip_address" {
-  description = "Public IP address used to access Portainer"
+  description = "Public IP address of the Linux virtual machine"
   value       = azurerm_public_ip.platform.ip_address
 }

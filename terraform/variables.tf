@@ -53,11 +53,22 @@ variable "subscription_id" {
   type        = string
 }
 
+
+variable "vm_name" {
+  description = "Name of the Linux virtual machine"
+  type        = string
+}
+
 variable "vm_size" {
   description = "Size of the Linux virtual machine"
   type        = string
-  default     = "Standard_B2s"
 }
+
+variable "admin_username" {
+  description = "Administrator username for the Linux virtual machine"
+  type        = string
+}
+
 variable "ssh_public_keys" {
   description = "SSH public keys for team members allowed to access the Linux virtual machine"
   type        = list(string)
