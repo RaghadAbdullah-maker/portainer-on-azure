@@ -29,5 +29,8 @@ admin_source_cidrs = [
 
 
 # The public SSH key on the computer that will deploy the VM
-ssh_public_key_path = "C:/Users/YOUR_USERNAME/.ssh/portainer_azure_2026.pub"
-
+ssh_public_keys = [
+  "ssh-ed25519 AAAA...MEMBER1...",
+  "ssh-ed25519 AAAA...MEMBER2...",
+  "ssh-ed25519 AAAA...MEMBER3..."
+]
