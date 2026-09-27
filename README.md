@@ -17,35 +17,31 @@ The VM connects to a virtual network and subnet. Network security rules allow SS
 - `presentation/` — Project slides (planned)
 
 ## Repository Structure
+
+```
 portainer-on-azure/
-│
-├── terraform/
+├── terraform/                    # Azure infrastructure (IaC)
 │   ├── providers.tf
 │   ├── main.tf
 │   ├── variables.tf
 │   ├── outputs.tf
 │   ├── terraform.tfvars.example
 │   └── .terraform.lock.hcl
-│
 ├── docker/
-│   └── docker-compose.yml
-│
+│   └── docker-compose.yml        # Portainer container definition
 ├── scripts/
-│   └── install-docker.sh
-│
+│   └── install-docker.sh         # Docker installation script for the VM
 ├── docs/
 │   ├── PROJECT_PLAN.md
 │   ├── ARCHITECTURE.md
-│   ├── architecture.png
-│   ├── implementation-guide.md
-│   └── screenshots/
-│
+│   ├── architecture.png          
+│   ├── implementation-guide.md   
+│   └── screenshots/             
 ├── presentation/
-│   └── portainer-on-azure.pptx
-│
+│   └── portainer-on-azure.pptx   # Project presentation
 ├── .gitignore
 └── README.md
-
+```
 
 ## Prerequisites
 Before deploying the project, make sure you have:
