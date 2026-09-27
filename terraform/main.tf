@@ -73,6 +73,63 @@ resource "azurerm_subnet_network_security_group_association" "platform" {
 
 #Create Public IP
 
+resource "azurerm_public_ip" "platform" {
+  name                = "pip-portainer-lab"
+  location            = azurerm_resource_group.platform.location
+  resource_group_name = azurerm_resource_group.platform.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
+
+
 #Crate NIC
 
+resource "azurerm_network_interface" "platform" {
+  name                = "nic-portainer-lab"
+  location            = azurerm_resource_group.platform.location
+  resource_group_name = azurerm_resource_group.platform.name
+
+  ip_configuration {
+    name                          = "primary"
+    subnet_id                     = azurerm_subnet.platform.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.platform.id
+  }
+}
+
 #Create VM
+
+
+resource "azurerm_linux_virtual_machine" "platform" {
+  name                = "vm-portainer-lab"
+  resource_group_name = azurerm_resource_group.platform.name
+  location            = azurerm_resource_group.platform.location
+  size                = var.vm_size
+  admin_username      = "azureuser"
+
+  network_interface_ids = [
+    azurerm_network_interface.platform.id
+  ]
+
+  disable_password_authentication = true
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = file(pathexpand(var.ssh_public_key_path))
+  }
+
+  os_disk {
+    name                 = "disk-portainer-lab"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    disk_size_gb         = 30
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
+    version   = "latest"
+  }
+}
