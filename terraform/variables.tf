@@ -47,3 +47,19 @@ variable "admin_source_cidrs" {
   }
 }
 
+
+variable "subscription_id" {
+  description = "Azure subscription ID used for deployment"
+  type        = string
+}
+
+variable "vm_size" {
+  description = "Size of the Linux virtual machine"
+  type        = string
+  default     = "Standard_B2s"
+}
+
+variable "ssh_public_key_path" {
+  description = "Path to the SSH public key on the deployment computer"
+  type        = string
+}

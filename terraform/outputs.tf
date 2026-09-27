@@ -31,4 +31,15 @@ output "nsg_name" {
 
 #VM name
 
+output "vm_name" {
+  description = "Name of the Portainer virtual machine"
+  value       = azurerm_linux_virtual_machine.platform.name
+}
+
+
 #Public IP address
+
+output "public_ip_address" {
+  description = "Public IP address used to access Portainer"
+  value       = azurerm_public_ip.platform.ip_address
+}
