@@ -114,10 +114,14 @@ resource "azurerm_linux_virtual_machine" "platform" {
 
   disable_password_authentication = true
 
-  admin_ssh_key {
+  dynamic "admin_ssh_key" {
+  for_each = var.ssh_public_keys
+
+  content {
     username   = "azureuser"
-    public_key = file(pathexpand(var.ssh_public_key_path))
+    public_key = admin_ssh_key.value
   }
+}
 
   os_disk {
     name                 = "disk-portainer-lab"

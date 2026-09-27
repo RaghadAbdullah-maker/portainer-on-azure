@@ -58,8 +58,7 @@ variable "vm_size" {
   type        = string
   default     = "Standard_B2s"
 }
-
-variable "ssh_public_key_path" {
-  description = "Path to the SSH public key on the deployment computer"
-  type        = string
+variable "ssh_public_keys" {
+  description = "SSH public keys for team members allowed to access the Linux virtual machine"
+  type        = list(string)
 }
