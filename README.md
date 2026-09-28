@@ -53,6 +53,66 @@ running Terraform.
 Use `terraform/terraform.tfvars.example` as a guide for local configuration.
 Keep your actual `terraform.tfvars` out of Git.
 
+## Getting Started
+
+The following steps are for a new deployment. Team members should coordinate
+before running `terraform apply` against shared Azure resources.
+
+1. Clone the repository and enter the project directory:
+
+   ```bash
+   git clone https://github.com/RaghadAbdullah-maker/portainer-on-azure.git
+   cd portainer-on-azure
+   ```
+
+2. Create a local variables file from the example. Fill in the Azure
+   subscription ID, team SSH public keys, and permitted source IP addresses:
+
+   ```bash
+   cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+   ```
+
+   Keep `terraform/terraform.tfvars` and Terraform state files out of Git.
+
+3. Initialize and check the Terraform configuration:
+
+   ```bash
+   terraform -chdir=terraform init
+   terraform -chdir=terraform fmt -check
+   terraform -chdir=terraform validate
+   terraform -chdir=terraform plan
+   ```
+
+4. After the team reviews the plan, one designated member deploys the
+   infrastructure:
+
+   ```bash
+   terraform -chdir=terraform apply
+   ```
+
+5. Obtain the VM's current public IP address from Azure. Connect using the
+   private SSH key that matches a public key configured for your team member:
+
+   ```bash
+   ssh -i ~/.ssh/<YOUR_PRIVATE_KEY> azureadmin@<PUBLIC_IP>
+   ```
+
+6. Install Docker on the VM using the documented setup procedure, then deploy
+   the Portainer Compose file. Run these commands from the project directory
+   on your own computer:
+
+   ```bash
+   scp -i ~/.ssh/<YOUR_PRIVATE_KEY> docker/docker-compose.yml azureadmin@<PUBLIC_IP>:~/docker-compose.yml
+   ssh -i ~/.ssh/<YOUR_PRIVATE_KEY> azureadmin@<PUBLIC_IP> \
+     'sudo docker compose -f ~/docker-compose.yml up -d'
+   ```
+
+7. From a permitted IP address, open `https://<PUBLIC_IP>:9443` to complete
+   Portainer setup.
+
+See [the implementation guide](docs/implementation-guide.md) for the team's
+full setup and monitoring walkthrough.
+
 ## Implementation
 
 1. Defined the Azure network, access rules, and Linux VM with Terraform.
