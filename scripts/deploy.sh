@@ -18,7 +18,11 @@ fi
 
 echo "Starting Portainer stack..."
 
-docker compose -f "$COMPOSE_FILE" up -d
+if docker compose -p azureadmin -f "$COMPOSE_FILE" up -d; then
+    echo "Deployment completed successfully."
+else
+    echo "Error: Deployment failed."
+    exit 1
+fi
 
-echo "Deployment completed."
-docker compose -f "$COMPOSE_FILE" ps
+docker compose -p azureadmin -f "$COMPOSE_FILE" ps
