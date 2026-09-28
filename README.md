@@ -1,62 +1,86 @@
 # Portainer on Azure
 
-This team project uses Terraform to prepare an Azure Linux VM for running Portainer with Docker.
+A team project that deploys a Linux virtual machine on Azure with Terraform,
+runs containerized applications with Docker, and manages them through Portainer.
+Uptime Kuma monitors a test website and sends Telegram alerts when it stops
+responding.
+
+## What we built
+
+| Component | Purpose |
+| --- | --- |
+| Terraform | Defines the Azure VM, network, and access rules as code |
+| Azure Linux VM | Hosts the project's containers |
+| Docker and Docker Compose | Run and configure the containers |
+| Portainer | Provides a web interface for container management |
+| Uptime Kuma | Checks whether the test website responds |
+| Telegram bot | Delivers monitoring alerts |
 
 ## Architecture
 
-Administrator → Public IP → Azure Linux VM → Docker → Portainer
-
-The VM connects to a virtual network and subnet. Network security rules allow SSH (port 22) and Portainer HTTPS (port 9443) only from the administrator IP addresses configured in Terraform.
-
-## Project files
-
-- `terraform/` — Azure infrastructure configuration
-- `docker/` — Portainer Docker Compose file (planned)
-- `scripts/` — Docker installation script (planned)
-- `docs/` — Architecture and screenshots (planned)
-- `presentation/` — Project slides (planned)
-
-## Repository Structure
-
-```
-portainer-on-azure/
-├── terraform/                    # Azure infrastructure (IaC)
-│   ├── providers.tf
-│   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-│   ├── terraform.tfvars.example
-│   └── .terraform.lock.hcl
-├── docker/
-│   └── docker-compose.yml        # Portainer container definition
-├── scripts/
-│   └── install-docker.sh         # Docker installation script for the VM
-├── docs/
-│   ├── PROJECT_PLAN.md
-│   ├── ARCHITECTURE.md
-│   ├── architecture.png          
-│   ├── implementation-guide.md   
-│   └── screenshots/             
-├── presentation/
-│   └── portainer-on-azure.pptx   # Project presentation
-├── .gitignore
-└── README.md
+```mermaid
+flowchart TD
+    Team["Team members"] --> IP["Azure public IP"]
+    IP --> VM["Azure Linux VM"]
+    VM --> Docker["Docker"]
+    Docker --> Portainer["Portainer"]
+    Docker --> Nginx["test-nginx"]
+    Docker --> Kuma["Uptime Kuma"]
+    Kuma -->|Checks website| Nginx
+    Kuma -->|Sends outage alert| Telegram["Telegram"]
 ```
 
-## Prerequisites
-Before deploying the project, make sure you have:
+The VM is connected to an Azure virtual network and subnet. Network rules
+restrict SSH (port 22) and Portainer HTTPS (port 9443) to the configured team
+IP addresses.
 
-- [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.x
-- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) (`az login` before running Terraform)
-- An Azure subscription with permissions to create resource groups, networking, and VMs
-- An SSH key pair per team member who needs VM access
-- 
-## Current status
+## Repository contents
 
-The Terraform configuration for the network and VM has been added. `terraform init -backend=false` and `terraform validate` completed successfully. Deploying the VM and installing Portainer are the next steps.
+| Path | Contents |
+| --- | --- |
+| `terraform/` | Azure infrastructure configuration and example variables |
+| `docker/` | Docker Compose configuration |
+| `scripts/` | VM setup and utility scripts |
+| `docs/` | Architecture, implementation notes, and screenshots |
 
-## Team workflow
+## Requirements
 
-Each team member works on a separate Git branch and opens a pull request before merging changes into `main`.
+To deploy the infrastructure, you need Terraform, Azure CLI, an Azure
+subscription with the required permissions, and an SSH key pair for each team
+member who needs VM access. Authenticate to Azure with `az login` before
+running Terraform.
 
-Do not upload `terraform.tfvars`, private SSH keys, or passwords to GitHub.
+Use `terraform/terraform.tfvars.example` as a guide for local configuration.
+Keep your actual `terraform.tfvars` out of Git.
+
+## Implementation
+
+1. Defined the Azure network, access rules, and Linux VM with Terraform.
+2. Validated and deployed the infrastructure.
+3. Installed Docker on the VM and ran Portainer.
+4. Deployed a test Nginx container for the demonstration.
+5. Deployed Uptime Kuma and configured it to check the test website.
+6. Configured a Telegram bot to receive monitoring alerts.
+
+## Demonstrated result
+
+We tested the complete incident workflow:
+
+1. `test-nginx` was running and Uptime Kuma reported **Up**.
+2. We stopped the container in Portainer to simulate an outage.
+3. Uptime Kuma reported **Down** and sent a Telegram alert.
+4. We started the container in Portainer.
+5. Uptime Kuma reported **Up** again.
+
+Uptime Kuma detects and reports an outage; the team restores the service
+through Portainer. Stopping the container is a controlled demonstration of
+an outage, not an automatic recovery feature.
+
+## Security
+
+- VM access uses SSH keys.
+- Azure network rules limit access to the configured team IP addresses.
+- Uptime Kuma's web interface is reached through an SSH tunnel rather than
+  an open public port.
+- `terraform.tfvars`, Terraform state files, private SSH keys, passwords, and
+  the Telegram bot token must not be committed to Git.
