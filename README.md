@@ -110,8 +110,7 @@ before running `terraform apply` against shared Azure resources.
 7. From a permitted IP address, open `https://<PUBLIC_IP>:9443` to complete
    Portainer setup.
 
-See [the implementation guide](docs/implementation-guide.md) for the team's
-full setup and monitoring walkthrough.
+
 
 ## Implementation
 
